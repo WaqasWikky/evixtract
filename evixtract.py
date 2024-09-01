@@ -1,27 +1,20 @@
+import argparse
 import subprocess
 
 def acquire_data(device, output):
-    try:
-        subprocess.run(['dd', f'if={device}', f'of={output}', 'bs=4M'], check=True)
-        print(f"Data acquisition successful: {output}")
-    except subprocess.CalledProcessError as e:
-        print(f"Error during acquisition: {e}")
+    command = ['dd', f'if={device}', f'of={output}', 'bs=4M']
+    subprocess.run(command)
 
 def create_image(device, output):
-    try:
-        subprocess.run(['dd', f'if={device}', f'of={output}', 'bs=4M'], check=True)
-        print(f"Imaging successful: {output}")
-    except subprocess.CalledProcessError as e:
-        print(f"Error during imaging: {e}")
+    command = ['dd', f'if={device}', f'of={output}', 'bs=4M']
+    subprocess.run(command)
 
-if __name__ == "__main__":
-    import argparse
-
+def main():
     parser = argparse.ArgumentParser(description="Data Acquisition and Imaging Tool")
-    parser.add_argument("--acquire", help="Acquire data from device", action="store_true")
-    parser.add_argument("--imaging", help="Create a disk image of device", action="store_true")
-    parser.add_argument("device", help="Device path (e.g., /dev/sda)")
-    parser.add_argument("output", help="Output file (e.g., image.dd)")
+    parser.add_argument('--acquire', action='store_true', help="Acquire data from device")
+    parser.add_argument('--imaging', action='store_true', help="Create a disk image of device")
+    parser.add_argument('device', type=str, help="Device path (e.g., /dev/sda)")
+    parser.add_argument('output', type=str, help="Output file (e.g., image.dd)")
 
     args = parser.parse_args()
 
@@ -30,4 +23,7 @@ if __name__ == "__main__":
     elif args.imaging:
         create_image(args.device, args.output)
     else:
-        print("Please specify either --acquire or --imaging.")
+        parser.print_help()
+
+if __name__ == "__main__":
+    main()
